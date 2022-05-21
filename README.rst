@@ -33,3 +33,6 @@ Cose secondarie:
 dashboard
 dbmanager
 brain
+
+COMANDI UTILI:
+poetry add nome_pacchetto --lock -D
