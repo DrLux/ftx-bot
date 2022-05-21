@@ -36,3 +36,8 @@ brain
 
 COMANDI UTILI:
 poetry add nome_pacchetto --lock -D
+
+###
+Link utili:
+https://analyzingalpha.com/ftx-rest-api-python
+https://algotrading101.com/learn/ftx-api-guide/

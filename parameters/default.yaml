@@ -1,7 +1,3 @@
-main:
-  prova: 1
-  sub1: secondo
-
-other:
-  prova: 2
-  sub1: secondo
+ftx_client:
+  key     :  "your_key"
+  secret  :  "your_secret"
