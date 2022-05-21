@@ -3,6 +3,7 @@ import hmac
 from requests import Request
 import pandas as pd
 import requests
+from order import Order
 
 
 class Exchange():
@@ -21,8 +22,16 @@ class Exchange():
     def get_open_order(self, order_id, market=None):
         return self.client.get_open_order(order_id,market)
 
-    def get_wallet(self):
-        return self.client.get_wallet()
-        
+    def get_all_wallets(self):
+        return self.client.get_all_wallets()
 
+    def get_sub_wallet(self,subwallet):
+        return self.client.get_sub_wallet(subwallet)
+
+    def cancel_order(self,order_id):
+        return self.client.cancel_order(order_id)
+        
+    def make_order(self,market,side,price,size,client_id):
+        #order = Order()
+        return self.client.place_order(market,side,price,size,client_id)
 

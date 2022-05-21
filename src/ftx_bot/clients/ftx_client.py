@@ -23,6 +23,9 @@ class FtxClient:
     def _post(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         return self._request('POST', path, json=params)
 
+    def _delete(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
+        return self._request('DELETE', path, json=params)
+
     def _request(self, method: str, path: str, **kwargs) -> Any:
         request = Request(method, self._ENDPOINT + path, **kwargs)
         self._sign_request(request)
@@ -53,7 +56,7 @@ class FtxClient:
                 raise Exception(data['error'])
             return data['result']
         
-    def place_order(self, market: str, side: str, price: float, size: float, client_id: str,
+    def place_order(self, market: str, side: str, price: float, size: float, client_id: "",
                     type: str = 'limit', reduce_only: bool = False, ioc: bool = False, post_only: bool = False,
                     ) -> dict:
         return self._post('orders', {'market': market,
@@ -70,13 +73,15 @@ class FtxClient:
     def get_open_order(self, order_id: int, market: str = None):
         orders = self._get(f'orders', {'market': market, 'order_id':order_id})
         df = pd.DataFrame(orders)
-        df = df.set_index('id')#.T
+        if not df.empty:
+            df = df.set_index('id')#.T
         return df
 
     def get_all_open_orders(self):
         orders = self._get("orders")
         df = pd.DataFrame(orders)
-        df = df.set_index('id')#.T
+        if not df.empty:
+            df = df.set_index('id')#.T
         return df 
 
     def get_all_markets(self):
@@ -92,10 +97,20 @@ class FtxClient:
         df = df.set_index('name')
         return df
 
-    def get_wallet(self):
-        wallet = self._get(f"wallet/balances")
-        df = pd.DataFrame(wallet)
-        df = df.set_index('coin')
-        df = df[df["total"] > 0]
-        return df
+    def get_all_wallets(self):
+        wallet = self._get(f"wallet/all_balances")
+        df = pd.DataFrame([wallet])
+        return df.T
+        
+    def get_sub_wallet(self,subwallet):
+        wallets = self.get_all_wallets().T
+        subwallet = wallets.get(subwallet) 
+        subwallet = pd.DataFrame(subwallet[0])
+        subwallet = subwallet.set_index('coin')
+        subwallet = subwallet[subwallet["total"] > 0]
+        return subwallet
+
+    def cancel_order(self,order_id):
+        orders = self._delete(f'orders/{order_id}')
+        print(orders)
 
