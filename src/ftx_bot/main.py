@@ -3,7 +3,7 @@ from omegaconf import DictConfig,OmegaConf
 from hydra.utils import get_original_cwd
 from clients.ftx_client import FtxClient
 from exchange import Exchange
-
+from wallet import Wallet
 
 @hydra.main(version_base=None, config_path='../../parameters', config_name='my_conf.yaml')
 def metodo(cfg: DictConfig):
@@ -17,11 +17,14 @@ def metodo(cfg: DictConfig):
     #print(r)
     #print("stampa prima: ", exchange.get_all_open_orders())
     #print(r)
-    exchange.cancel_order(148396000502)
-    print("stampa dopo: ", exchange.get_all_open_orders())
+    #exchange.cancel_order(148396000502)
+    #print("stampa dopo: ", exchange.get_all_open_orders())
     #print(exchange.get_open_order("139563598672"))
     
     #wallet = exchange.get_sub_wallet('gold')
+    wallet = Wallet(exchange)
+    print(wallet.coins)
+    #wallet = exchange.get_all_wallets()
     #print("solo gold: \n", wallet)
 
     
