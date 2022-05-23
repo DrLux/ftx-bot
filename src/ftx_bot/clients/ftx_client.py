@@ -56,6 +56,8 @@ class FtxClient:
                 raise Exception(data['error'])
             return data['result']
         
+    
+    # side = "buy" or "sell"
     def place_order(self, market: str, side: str, price: float, size: float, client_id: "",
                     type: str = 'limit', reduce_only: bool = False, ioc: bool = False, post_only: bool = False,
                     ) -> dict:
@@ -68,6 +70,15 @@ class FtxClient:
                                      'ioc': ioc,
                                      'postOnly': post_only,
                                      'clientId': client_id,
+                                     })
+
+    def place_conditional_order(self, market: str, side: str, price: float, size: float, type: str, orderPrice : float) -> dict:
+        return self._post('conditional_orders', {'market': market,
+                                     'side': side,
+                                     'triggerPrice': price,
+                                     'size': size,
+                                     'type': type,
+                                     'orderPrice' : orderPrice
                                      })
     
     def get_open_order(self, order_id: int, market: str = None):
@@ -102,6 +113,8 @@ class FtxClient:
         df = pd.DataFrame([wallet])
         return df.T
         
+    
+
     def get_sub_wallet(self,subwallet):
         wallets = self.get_all_wallets().T
         subwallet = wallets.get(subwallet) 
