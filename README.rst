@@ -37,7 +37,22 @@ brain
 COMANDI UTILI:
 poetry add nome_pacchetto --lock -D
 
+##COMANDI DENTRO IL DOCKER 
+poetry export -f requirements.txt --output requirements.txt --without-hashes
+docker build . -t ftx-bot
+docker run -it ftx-box
+pip install -r requirements.txt
+poetry install 
+poetry run python main.py
+
+
 ###
+deploy docker:
+https://www.stereolabs.com/docs/docker/building-arm-container-on-x86/
+docker build . -t ftx-bot
+docker run ftx-bot
+
+
 Link utili:
 https://analyzingalpha.com/ftx-rest-api-python
 https://algotrading101.com/learn/ftx-api-guide/

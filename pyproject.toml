@@ -6,6 +6,14 @@ authors = ["drlux <sorrentino.luca@outlook.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pytest = "^5.2"
+hydra-core = "^1.2.0"
+PyYAML = "^6.0"
+pathlib = "^1.0.1"
+requests = "^2.27.1"
+pandas = "^1.4.2"
+plotly = "^5.8.0"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
@@ -14,6 +22,7 @@ PyYAML = "^6.0"
 pathlib = "^1.0.1"
 requests = "^2.27.1"
 pandas = "^1.4.2"
+plotly = "^5.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
