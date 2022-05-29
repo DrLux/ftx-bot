@@ -1,7 +1,7 @@
 
 import time
 import logging
-from exchange import Exchange
+from tradingbot.exchange import Exchange
 
 # Documentation:
 # https://help.ftx.com/hc/en-us/articles/360031896592-Advanced-Order-Types

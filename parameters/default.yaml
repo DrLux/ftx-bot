@@ -1,3 +1,8 @@
-ftx_client:
-  key     :  "your_key"
-  secret  :  "your_secret"
+prm_dict:
+  prova: 1
+  sub1:
+  - primo
+  - secondo
+sec_dict:
+  prova: 2
+  sub1: secondo

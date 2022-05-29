@@ -125,5 +125,4 @@ class FtxClient:
 
     def cancel_order(self,order_id):
         orders = self._delete(f'orders/{order_id}')
-        print(orders)
 

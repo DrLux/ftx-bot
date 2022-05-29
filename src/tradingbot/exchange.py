@@ -1,13 +1,7 @@
-import time
-import hmac
-from requests import Request
-import pandas as pd
-import requests
-from order import Order
+from tradingbot.utils import SingletonMeta
 
-
-class Exchange():
-    def __init__(self,client) -> None:
+class Exchange(metaclass=SingletonMeta):
+    def __init__(self,client=None) -> None:
         self.client = client   
 
     def get_single_market(self, market_name):
@@ -31,7 +25,9 @@ class Exchange():
     def cancel_order(self,order_id):
         return self.client.cancel_order(order_id)
         
-    def make_order(self,market,side,price,size,client_id):
-        #order = Order()
-        return self.client.place_order(market,side,price,size,client_id)
+    def make_order(self,market,side,price,size,client_id=None):
+        return self.client.place_order(market,side,price,size,client_id=None)
+
+    def place_conditional_order(self,market,side,price,size,type,orderPrice):
+        return self.client.place_conditional_order(market,side,price,size,type,orderPrice)
 

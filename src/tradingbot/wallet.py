@@ -1,4 +1,9 @@
 import pandas as pd
+from tradingbot.exchange import Exchange
+import logging
+
+# A logger for this file
+log = logging.getLogger(__name__)
 
 class SubWallet():
     def __init__(self,name,balance) -> None:
@@ -16,20 +21,19 @@ class SubWallet():
 
 
 class Wallet():
-    def __init__(self,exchange=None) -> None:
+    def __init__(self) -> None:
+        self.exchange = Exchange()
         self.subWallets = dict()
-        if exchange:
-            self.exchange = exchange 
-            self.syncronize(exchange)
+        self.syncronize()
 
 
-    def syncronize(self,exchange):
-        df = exchange.get_all_wallets()
+    def syncronize(self):
+        df = self.exchange.get_all_wallets()
         subWalletNames = list(df.index) 
         
         df = df.T
         for name in subWalletNames:
-            balance = exchange.get_sub_wallet(name)
+            balance = self.exchange.get_sub_wallet(name)
             subWallet = SubWallet(name,balance)
             self.subWallets[name] = subWallet
 
