@@ -1,3 +1,4 @@
+import plotly
 from pathlib import Path
 import plotly.graph_objects as go
 from PIL import Image
@@ -28,6 +29,18 @@ class DF_Plotter():
     def plot(self,title):
         fig = self.create_plot(title)
         fig.show()
+
+    def get_plot_as_img(self,title):
+        in_memory_file = self.get_plot_as_bytes(title)
+        image = Image.open(in_memory_file)
+        return image
+        
+    def get_plot_as_bytes(self,title):
+        fig = self.create_plot(title)
+        in_memory_file = io.BytesIO()
+        plotly.io.write_image(fig, in_memory_file, format='png')
+        return in_memory_file
+
 
     def dump_plot(self,path,title=None):
         path = Path(path) 
