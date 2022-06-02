@@ -49,8 +49,7 @@ class DonwloaderCandles(metaclass=SingletonMeta):
 
 
 
-def isBullish(df):
-    candle = df.iloc[-1]
+def isBullish(candle):
     lastDiff = candle.close - candle.open 
     isBullish = lastDiff > 0
     return isBullish

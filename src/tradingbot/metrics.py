@@ -1,6 +1,7 @@
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import datetime
+from tradingbot.utils import isBullish
 
 class HeikinAshi():
     def __init__(self,data) -> None:
@@ -40,4 +41,12 @@ class HeikinAshi():
 
         return HAdf
 
+    def trendChange(self,hadf):
+        lastCandle          = isBullish(hadf.iloc[-1]) 
+        SecondLastCandle    = isBullish(hadf.iloc[-2])
 
+        trendChanged = lastCandle != SecondLastCandle
+
+        return trendChanged
+    
+        
