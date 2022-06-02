@@ -29,7 +29,7 @@ class SubWallet():
     def __str__(self):
         return str(self.balance)
 
-    def usb_balance(self):
+    def usd_balance(self):
         usd_balance = dict()
         for index, row in self.data.iterrows():            
             usd_balance[index] = row.usdValue

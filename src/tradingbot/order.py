@@ -16,7 +16,6 @@ class Order():
         self.side       = kwargs.get('side') 
         self.size       = kwargs.get('size') 
         self.price      = kwargs.get('price') 
-        self.use_shadow = kwargs.get('useShadow')
         self.order_id   = None 
         self.exchange   = kwargs.get('exchange') 
         
@@ -77,14 +76,20 @@ class stopLossLimit(Order):
         self.dateCreationOrder = self.order_info['createdAt']
         log.info(f"Created order: {self.order_info}") 
 
-'''
+#Take-profit if you are buying, the order will get sent when the market price drops below your trigger price. If you are selling, the order will get sent when the market price exceeds above your trigger price.
 class TakeProfitLimit(Order):
     def __init__(self,market,side,price,size,client_id=None) -> None:
         super().__init__()
 
-    def place_order(self):
+    def help(self):
+        return "Take-Profit buy orders are sent when the market price drop below your trigger price. Take-Profit sell orders are sent when the market price exceeds above your trigger price."
 
-'''
+    def place_order(self):
+        self.order_info = self.exchange.place_conditional_order(self.market,self.side,self.price,self.size,type="take_profit",orderPrice=self.orderPrice)
+        self.order_id = self.order_info['id']
+        self.dateCreationOrder = self.order_info['createdAt']
+        log.info(f"Created order: {self.order_info}") 
+
     
 
 
