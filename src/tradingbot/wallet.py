@@ -6,23 +6,39 @@ import logging
 log = logging.getLogger(__name__)
 
 class SubWallet():
-    def __init__(self,name,balance) -> None:
+    def __init__(self,name,data) -> None:
         self.name = name 
-        self.balance = balance
+        self.data = data
+        self.balance = self.get_balance()
         
     @property
     def coins(self):
-        return list(self.balance.index)
+        return list(self.data.index)
 
     @property
     def totalUsdValue(self):
-        total = self.balance.sum(axis = 0, skipna = True)
+        total = self.data.sum(axis = 0, skipna = True)
         return total['usdValue'] 
+
+    def get_balance(self):
+        balance = dict()
+        for index, row in self.data.iterrows():            
+            balance[index] = row.free
+        return balance
+    
+    def __str__(self):
+        return str(self.balance)
+
+    def usb_balance(self):
+        usd_balance = dict()
+        for index, row in self.data.iterrows():            
+            usd_balance[index] = row.usdValue
+        return usd_balance
 
 
 class Wallet():
-    def __init__(self) -> None:
-        self.exchange = Exchange()
+    def __init__(self,exchange) -> None:
+        self.exchange = exchange
         self.subWallets = dict()
         self.syncronize()
 

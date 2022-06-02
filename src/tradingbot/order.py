@@ -18,7 +18,7 @@ class Order():
         self.price      = kwargs.get('price') 
         self.use_shadow = kwargs.get('useShadow')
         self.order_id   = None 
-        self.exchange   = Exchange() 
+        self.exchange   = kwargs.get('exchange') 
         
         client_id = int(time.time() * 1000) 
         self.client_id = client_id
@@ -47,6 +47,17 @@ class Order():
 
     def store_order(self):
         pass
+
+class MarketOrder(Order):
+    def __init__(self,**kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def place_order(self):
+        self.order_info = self.exchange.make_order(self.market,self.side,self.price,self.size,type="market")
+        self.order_id = self.order_info['id']
+        self.dateCreationOrder = self.order_info['createdAt']
+        log.info(f"Created order: {self.order_info}") 
+
 
 
 #Stop-loss buy orders are sent when the market price exceeds their trigger price. Stop-loss sell orders are sent when the market price drops below their trigger price."
