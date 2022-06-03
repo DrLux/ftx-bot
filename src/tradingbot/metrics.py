@@ -43,9 +43,8 @@ class HeikinAshi():
 
     def trendChange(self,hadf):
         lastCandle          = isBullish(hadf.iloc[-1]) 
-        SecondLastCandle    = isBullish(hadf.iloc[-2])
-
-        trendChanged = lastCandle != SecondLastCandle
+        secondLastCandle    = isBullish(hadf.iloc[-2])
+        trendChanged = lastCandle != secondLastCandle      
 
         return trendChanged
     
