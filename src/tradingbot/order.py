@@ -58,7 +58,6 @@ class MarketOrder(Order):
         log.info(f"Created order: {self.order_info}") 
 
 
-
 #Stop-loss buy orders are sent when the market price exceeds their trigger price. Stop-loss sell orders are sent when the market price drops below their trigger price."
 class stopLossLimit(Order):
     #orderPrice:	optional; order type is limit if this is specified; otherwise market
