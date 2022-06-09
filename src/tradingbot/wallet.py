@@ -7,9 +7,10 @@ log = logging.getLogger(__name__)
 
 class SubWallet():
     def __init__(self,name,data) -> None:
-        self.name = name 
-        self.data = data
-        self.balance = self.get_balance()
+        self.name           = name 
+        self.data           = data
+        self.balance        = self.get_balance()
+        self.balanceInUsd   = self.get_usd_balance()
         
     @property
     def coins(self):
@@ -19,6 +20,13 @@ class SubWallet():
     def totalUsdValue(self):
         total = self.data.sum(axis = 0, skipna = True)
         return total['usdValue'] 
+
+    def get_usd_balance(self):
+        balance = dict()
+        for index, row in self.data.iterrows():            
+            if row.usdValue > 1:
+                balance[index] = row.usdValue
+        return balance
 
     def get_balance(self):
         balance = dict()
