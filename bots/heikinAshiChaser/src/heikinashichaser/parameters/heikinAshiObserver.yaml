@@ -1,0 +1,20 @@
+bot:
+  default_fiat  : USD
+  market_src    : BTC
+  testMode      : False
+  useNotifier   : True
+
+notifier:
+  user_id : your_user_id
+  token   : your_token
+
+strategy:
+  numMonth  : 3
+
+ftx_client:
+  key                 :  your_key
+  secret              :  your_secret
+  subaccount_name     :  dedicated_subaccount
+  
+dbOrder:
+  db_path             : "./database/your_sqlite.db"
