@@ -1,2 +1,3 @@
 bots/heikinAshiChaser/src/heikinashichaser/parameters/myheikinAshiObserver.yaml
 /outputs/*
+*/outputs/
