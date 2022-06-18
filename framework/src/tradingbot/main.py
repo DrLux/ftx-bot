@@ -16,7 +16,6 @@ class Bot():
         self.exchange = Exchange(client)
         wallet = Wallet(self.exchange)
         subAccountName = cfg.ftx_client['subaccount_name']
-        self.useShadowOrders = cfg.ftx_client['useShadowOrders']
         self.subWallet = wallet.subWallets[subAccountName]
         self.default_fiat = "USD"
         self.mkt_dst = cfg.ftx_client['destination_market'].upper()
@@ -91,14 +90,3 @@ class Bot():
         order = stopLossLimit(**stopLossLimit)
     '''
     
-
-
-
-@hydra.main(version_base=None, config_path='../../parameters', config_name='my_conf.yaml')
-def metodo(cfg: DictConfig):
-    bot = Bot(cfg)
-    bot.run()
-   
-
-if __name__ == "__main__":
-    metodo()

@@ -25,7 +25,7 @@ def main(cfg: DictConfig):
         confBot                 = OmegaConf.merge(cfg['bot'], cfg['ftx_client'])
 
     strategy = Strategy(cfg.strategy,notifier)
-    strategy.plotHA()
+    #strategy.plotHA()
     bot = Bot(confBot,strategy,notifier,dbManager)
     bot.run()
     

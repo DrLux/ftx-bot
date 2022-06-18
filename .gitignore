@@ -1,3 +1,5 @@
 bots/heikinAshiChaser/src/heikinashichaser/parameters/myheikinAshiObserver.yaml
-/outputs/*
-*/outputs/
+outputs
+*.pyc
+__pycache__
+bots/heikinAshiChaser/src/heikinashichaser/__pycache__/strategy.cpython-39.pyc

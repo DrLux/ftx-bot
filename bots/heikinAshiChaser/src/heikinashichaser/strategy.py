@@ -36,6 +36,7 @@ class Strategy():
         start           = start.timestamp()
         resolution = self.donwloader.resolutions
         data = self.donwloader.get_data(start,self.market,resolution['WEEK'])
+        data = data[:-1] # remove last incompleted week
         return data
         
 
