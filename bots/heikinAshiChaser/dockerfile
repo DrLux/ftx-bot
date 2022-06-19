@@ -1,13 +1,26 @@
-FROM python:latest
+ARG platform
 
-COPY . /heikinAshiObserver
-WORKDIR /heikinAshiObserver
+# for x86/64 build (es: Docker for PC)
+FROM python:latest as branch_pc
+
+# for aarch64 build (es: Docker for Raspberry)
+FROM arm64v8/ubuntu as branch_arm
+
+# a sort of switch case
+FROM branch_${platform} AS final 
+RUN echo "You are using ${platform} image!"
+
+VOLUME "/heikinashichaser"
+COPY externalPackage/*.whl /externalPackage/
 
 RUN apt-get update
 RUN apt-get install -y build-essential checkinstall
-RUN python -m pip install --upgrade pip
-RUN python -m pip install externalPackage/tradingBot-0.1.0-py3-none-any.whl
+RUN apt install -y python3
+RUN apt-get -y install python3-pip
+RUN python3 -m pip install --upgrade pip
 
+RUN pip install externalPackage/*.whl
 
+WORKDIR /heikinashichaser
 
-CMD ["python", "src/heikinashichaser/main.py"]
+CMD ["python3", "src/heikinashichaser/main.py"]
