@@ -1,3 +1,4 @@
+'''
 import hydra
 from omegaconf import DictConfig,OmegaConf
 from hydra.utils import get_original_cwd
@@ -6,87 +7,79 @@ from exchange import Exchange
 from wallet import Wallet
 import logging
 from order import Order,stopLossLimit,MarketOrder
+from utils import DonwloaderCandles
+from datetime import datetime
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+import mplfinance as mpf
 
 # A logger for this file
 log = logging.getLogger(__name__)
 
-class Bot():
-    def __init__(self,cfg) -> None:
-        client = FtxClient(cfg.ftx_client['key'],cfg.ftx_client['secret'],cfg.ftx_client['subaccount_name'])
-        self.exchange = Exchange(client)
-        wallet = Wallet(self.exchange)
-        subAccountName = cfg.ftx_client['subaccount_name']
-        self.subWallet = wallet.subWallets[subAccountName]
-        self.default_fiat = "USD"
-        self.mkt_dst = cfg.ftx_client['destination_market'].upper()
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + timedelta(days_ahead)
 
-    @property
-    def isFullFiat(self):
-        isfullfiat = self.default_fiat == self.get_wallet_dominance() 
-        log.info(f"The wallet is full of Fiat -> {isfullfiat}") 
-        return  isfullfiat
+def prepareData(lastMonts,donwloader,market):
+    currentDate     = datetime.now()
+    #starting the week always from Tuesday, to aling the result to the tradingview's one
+    currentDate     = next_weekday(currentDate, 1) # 0 = Monday, 1=Tuesday, 2=Wednesday...
 
-    
-    def get_wallet_dominance(self):
-        balance = self.subWallet.balance
-        dom = max(balance, key=balance.get)
-        log.info(f"The wallet dominance is {dom} with  {balance[dom]}") 
-        return dom
-
-    def run(self):
-        if self.isFullFiat:
-            self.buyAll()
-            self.full_fiat = False
-        else:
-            self.sellAll()
-            self.full_fiat = True
-
-    def buyAll(self):
-        size = self.getAllBuyableCoins()
-        self.marketOrder("buy",size)
-      
-
-    def sellAll(self):
-        size = self.getAllSellableCoins()
-        self.marketOrder("sell",size)
-    
-
-    def getAllSellableCoins(self):
-        available_coins = self.subWallet.balance[self.mkt_dst] 
-        #print("available_coins: ", available_coins)
-        #size = self.exchange.get_change(available_coins,self.mkt_dst,"USD")
-        #print("size: ", size)
-        return available_coins
-
-    def getAllBuyableCoins(self):
-        available_fiat = self.subWallet.balance[self.default_fiat] 
-        size = self.exchange.get_change(available_fiat,"USD",self.mkt_dst)
-        return size
+    past_date       = currentDate - relativedelta(months=lastMonts)
+    start           = datetime(past_date.year,past_date.month,past_date.day)
+    start           = start.timestamp()
+    resolution      = donwloader.resolutions
+    data            = donwloader.get_data(start,market,resolution['WEEK'])
+    data            = data[:-1] # remove last incompleted week
+    return data
 
 
-    def marketOrder(self,side,size):
-        marketOrderData = {
-            "market": f"{self.mkt_dst}/{self.default_fiat}",
-            "side":side,
-            "size":size,
-            "price":None,
-            'exchange':self.exchange
-        }
 
-        log.info(f"Tring to {side} order: {marketOrderData}") 
-        order = MarketOrder(**marketOrderData)
 
-    '''
-    def stopLossLimit(self,price):
-        size = self.getAllSellableCoins()
-        stopLossLimit = {
-            "market": f"{self.mkt_dst}/{self.default_fiat}",
-            "side":"sell",
-            "size":size,
-            "price":price,
-            'stopLossPrice': price, 
-            'exchange':self.exchange
-        }
-        order = stopLossLimit(**stopLossLimit)
-    '''
-    
+# GET DATA
+donwloader  = DonwloaderCandles()
+resolution = donwloader.resolutions
+data = prepareData(3,donwloader,"PAXG/USD")
+print(data)
+
+
+
+#subplot = [    
+#    mpf.make_addplot(df_trades['Trades']),
+#    mpf.make_addplot(df_sell['Sell'],type='scatter',markersize=200,marker='v',color='red'),
+#    mpf.make_addplot(df_buy['Buy'],type='scatter',markersize=200,marker='^',color='green'),
+#]
+        
+link_plot = './cangle_plot.jpg'
+
+plot_volume = "volume" in data.columns
+filepath = None 
+mavs = []
+subplots = []
+
+a = mpf.plot(
+            data, 
+            title="ciao",
+            figscale=1.2,
+            figratio=(10, 6),
+            type="candle", 
+            tight_layout=True, 
+            style="binance",
+            #savefig=False,
+            mav=mavs, 
+            addplot=subplots,
+            volume=plot_volume
+        )
+
+import io
+from PIL import Image
+
+buf = io.BytesIO()
+mpf.plot(data,type='candle',savefig=buf)
+buf.seek(0)
+buff_image = buf
+image = Image.open(buff_image)
+image.show()
+'''

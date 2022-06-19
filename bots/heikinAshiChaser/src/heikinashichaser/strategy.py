@@ -1,5 +1,5 @@
 
-from tradingbot.plotter import DF_Plotter
+from tradingbot.plotter import MPL_Plotter
 from tradingbot.utils import DonwloaderCandles,isBullish
 from datetime import datetime
 from datetime import timedelta
@@ -49,7 +49,7 @@ class Strategy():
     def plotHA(self):
         ha,hadf = self.calculate()
         #plotter = DF_Plotter(hadf[-10:])
-        plotter = DF_Plotter(hadf[:])
+        plotter = MPL_Plotter(hadf[:])
         title = f"The HeikinAshi plot for market [{self.market}]!"
         plotter.plot(title)       
 
@@ -57,7 +57,7 @@ class Strategy():
     def sendNotification(self,hadf,trendChanged,bullish,whatToDO):
         currentDate     = datetime.now()
         currend_date    = currentDate.strftime("%D:%M:%Y")  
-        plotter = DF_Plotter(hadf[-10:])       
+        plotter = MPL_Plotter(hadf[-10:])       
 
         # SEND PLOT BULLISH/BEARISH        
         if bullish:

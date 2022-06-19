@@ -16,7 +16,7 @@ plotly = "^5.8.0"
 colorama = "^0.4.4"
 telegram-send = "^0.34"
 Pillow = "^9.1.1"
-kaleido = "0.2.1"
+mplfinance = "^0.12.9-beta.1"
 
 
 [tool.poetry.dev-dependencies]
@@ -28,9 +28,9 @@ requests = "^2.27.1"
 pandas = "^1.4.2"
 plotly = "^5.8.0"
 Pillow = "^9.1.1"
-kaleido = "^0.2.1"
 traitlets = "^5.2.1"
 pickleshare = "^0.7.5"
+mplfinance = "^0.12.9-beta.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
