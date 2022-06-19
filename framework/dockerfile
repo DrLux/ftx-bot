@@ -1,22 +1,30 @@
-#FROM python:latest
-FROM arm32v7/python:latest
+ARG platform
 
-COPY . /tradingBot
-WORKDIR /tradingBot
+# for x86/64 build (es: Docker for PC)
+FROM python:latest as branch_pc
+
+# for aarch64 build (es: Docker for Raspberry)
+FROM arm64v8/ubuntu as branch_arm
+
+# a sort of switch case
+FROM branch_${platform} AS final 
+RUN echo "You are using ${platform} image!"
+
+
+VOLUME "/framework"
+
+WORKDIR /framework
 
 RUN apt-get update
 RUN apt-get install -y build-essential checkinstall
-RUN python -m pip install --upgrade pip
+RUN apt install -y python3
+RUN apt-get -y install python3-pip
 
-RUN pip install poetry
-RUN poetry build
-#RUN poetry install
+#RUN python -m pip install -U pip
+#RUN pip install poetry
 
-#RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-#RUN pip install -r requirements.txt
+CMD ["/bin/bash"]
+#CMD ["poetry", "build"] 
 
-#CMD ["pip install", "dist/tradingBot-0.1.0-py3-none-any.whl"]
-#CMD ["/bin/bash"] 
-#CMD ["python", "./src/tradingBot/bots/heikinAshiObserver.py"]
-#CMD ["poetry run", "python src/tradingBot/bots/heikinAshiObserver.py"] 
 
+#docker run --rm -it -t -v /home/drlux/Desktop/follower/tradingBot:/media/reference  raspychaser
